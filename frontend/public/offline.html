@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Disaster Prep Punjab</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .emergency-info {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        .emergency-info h3 {
+            margin-top: 0;
+            color: #fecaca;
+        }
+        .contact-list {
+            text-align: left;
+            margin-top: 1rem;
+        }
+        .contact-item {
+            margin: 0.5rem 0;
+            font-weight: 500;
+        }
+        .retry-btn {
+            background: white;
+            color: #1d4ed8;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .retry-btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📡</div>
+        <h1>You're Offline</h1>
+        <p>Punjab Disaster Preparedness app is working offline. Some features may be limited, but essential emergency information is still available.</p>
+        
+        <button class="retry-btn" onclick="location.reload()">Try Again</button>
+        
+        <div class="emergency-info">
+            <h3>🚨 Emergency Contacts</h3>
+            <div class="contact-list">
+                <div class="contact-item">🚔 Police: 100</div>
+                <div class="contact-item">🚒 Fire: 101</div>
+                <div class="contact-item">🏥 Medical: 108</div>
+                <div class="contact-item">🆘 Disaster Helpline: 1078</div>
+                <div class="contact-item">📞 Punjab Emergency: 1070</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check for network connectivity
+        window.addEventListener('online', function() {
+            location.reload();
+        });
+
+        // Show network status
+        function updateNetworkStatus() {
+            if (navigator.onLine) {
+                location.reload();
+            }
+        }
+
+        setInterval(updateNetworkStatus, 5000);
+    </script>
+</body>
+</html>

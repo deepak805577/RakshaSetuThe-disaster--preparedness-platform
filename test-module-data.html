@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Data Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        .video-item { margin: 5px 0; padding: 8px; background: #e9ecef; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Module Data Structure Test</h1>
+        <p>This page tests the exact structure of module data from the API.</p>
+        
+        <div id="results"></div>
+        
+        <hr>
+        <h3>📋 Instructions:</h3>
+        <ol>
+            <li>Make sure your backend is running on port 5000</li>
+            <li>Open browser console (F12) for detailed logs</li>
+            <li>Check the results below</li>
+        </ol>
+    </div>
+
+    <script>
+        async function testModuleStructure() {
+            const resultsDiv = document.getElementById('results');
+            
+            function addResult(type, title, content) {
+                const div = document.createElement('div');
+                div.className = `test-result ${type}`;
+                div.innerHTML = `<h3>${title}</h3><div>${content}</div>`;
+                resultsDiv.appendChild(div);
+            }
+            
+            // Test 1: Basic API connectivity
+            addResult('info', '⏳ Test 1: Testing API connectivity', 'Connecting to backend...');
+            
+            try {
+                const healthResponse = await fetch('http://localhost:5000/api/health');
+                const healthData = await healthResponse.json();
+                
+                if (healthResponse.ok) {
+                    addResult('success', '✅ Test 1 PASSED', `Backend is healthy: ${healthData.message}`);
+                } else {
+                    addResult('error', '❌ Test 1 FAILED', 'Backend health check failed');
+                    return;
+                }
+            } catch (error) {
+                addResult('error', '❌ Test 1 FAILED', `Cannot connect to backend: ${error.message}`);
+                return;
+            }
+            
+            // Test 2: Modules API structure
+            addResult('info', '⏳ Test 2: Testing modules API', 'Fetching modules...');
+            
+            try {
+                const modulesResponse = await fetch('http://localhost:5000/api/modules');
+                const modulesData = await modulesResponse.json();
+                
+                if (modulesResponse.ok && modulesData.success) {
+                    addResult('success', '✅ Test 2 PASSED', `
+                        <strong>API Response:</strong><br>
+                        Success: ${modulesData.success}<br>
+                        Count: ${modulesData.count}<br>
+                        Data array length: ${modulesData.data.length}
+                    `);
+                    
+                    // Test 3: Individual module structure
+                    addResult('info', '⏳ Test 3: Analyzing module structure', 'Checking individual modules...');
+                    
+                    let totalVideos = 0;
+                    const moduleDetails = modulesData.data.map((module, index) => {
+                        const videoCount = module.content?.videos?.length || 0;
+                        totalVideos += videoCount;
+                        
+                        return `
+                            <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                <strong>Module ${index + 1}:</strong> ${module.title}<br>
+                                <strong>Type:</strong> ${module.type}<br>
+                                <strong>ID:</strong> ${module._id}<br>
+                                <strong>Has content:</strong> ${!!module.content}<br>
+                                <strong>Has content.videos:</strong> ${!!module.content?.videos}<br>
+                                <strong>Video count:</strong> ${videoCount}<br>
+                                ${videoCount > 0 ? `<strong>Videos:</strong><ul>${module.content.videos.map(video => `<li>${video.title} (${video.section})</li>`).join('')}</ul>` : '<em>No videos found</em>'}
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    addResult('success', '✅ Test 3 PASSED', `
+                        <strong>Found ${modulesData.data.length} modules with ${totalVideos} total videos:</strong><br>
+                        ${moduleDetails}
+                    `);
+                    
+                    // Test 4: Specific module API
+                    if (modulesData.data.length > 0) {
+                        const firstModuleId = modulesData.data[0]._id;
+                        addResult('info', '⏳ Test 4: Testing specific module API', `Fetching module ${firstModuleId}...`);
+                        
+                        try {
+                            const moduleResponse = await fetch(`http://localhost:5000/api/modules/${firstModuleId}`);
+                            const moduleData = await moduleResponse.json();
+                            
+                            if (moduleResponse.ok && moduleData.success) {
+                                const module = moduleData.data;
+                                const videoCount = module.content?.videos?.length || 0;
+                                
+                                addResult('success', '✅ Test 4 PASSED', `
+                                    <strong>Individual Module API Working:</strong><br>
+                                    Title: ${module.title}<br>
+                                    Type: ${module.type}<br>
+                                    Video count: ${videoCount}<br>
+                                    ${videoCount > 0 ? `<strong>Video details:</strong><br>${module.content.videos.map(video => `<div class="video-item">📹 ${video.title}<br>Section: ${video.section}<br>URL: ${video.url}</div>`).join('')}` : 'No videos in this module'}
+                                `);
+                            } else {
+                                addResult('error', '❌ Test 4 FAILED', `Individual module API failed: ${moduleData.message}`);
+                            }
+                        } catch (error) {
+                            addResult('error', '❌ Test 4 FAILED', `Individual module API error: ${error.message}`);
+                        }
+                    }
+                    
+                } else {
+                    addResult('error', '❌ Test 2 FAILED', `Modules API error: ${modulesData.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                addResult('error', '❌ Test 2 FAILED', `Modules API network error: ${error.message}`);
+            }
+            
+            // Final summary
+            setTimeout(() => {
+                addResult('info', '🏁 Test Complete', `
+                    <strong>Summary:</strong><br>
+                    - If all tests passed and you see videos listed above, the API is working correctly<br>
+                    - If the API shows videos but your React app doesn't, it's a frontend rendering issue<br>
+                    - If the API doesn't show videos, it's a backend data issue<br>
+                    <br>
+                    <strong>Next steps:</strong><br>
+                    1. Check the frontend React components for video rendering logic<br>
+                    2. Verify the video data is being properly processed in the frontend<br>
+                    3. Check for console errors in the React application
+                `);
+            }, 1000);
+        }
+        
+        // Run tests when page loads
+        window.onload = testModuleStructure;
+    </script>
+</body>
+</html>
