@@ -10,9 +10,9 @@ const Footer: React.FC = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
               <div className="h-8 w-8 bg-red-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">DP</span>
+                <span className="text-white font-bold text-sm">RS</span>
               </div>
-              <span className="ml-2 text-xl font-bold">Disaster Preparedness</span>
+              <span className="ml-2 text-xl font-bold">RakshSetu</span>
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
               Empowering Punjab schools with comprehensive disaster preparedness education 

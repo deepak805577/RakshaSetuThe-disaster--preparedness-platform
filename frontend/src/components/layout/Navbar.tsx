@@ -35,10 +35,10 @@ const Navbar: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
               <div className="h-8 w-8 bg-red-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">DP</span>
+                <span className="text-white font-bold text-sm">RS</span>
               </div>
               <span className="ml-2 text-xl font-bold text-gray-900">
-                Disaster Preparedness
+                RakshaSetu
               </span>
             </Link>
           </div>
